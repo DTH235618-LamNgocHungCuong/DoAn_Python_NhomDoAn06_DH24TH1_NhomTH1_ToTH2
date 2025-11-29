@@ -35,7 +35,7 @@ USE QLKS_DA
 
 CREATE TABLE Tang
 (
-    Tang INT check(Tang >= 0 AND Tang <= 9) NOT NULL, 
+    Tang INT check(Tang >= 0 AND Tang <= 20) NOT NULL, 
  
     PRIMARY KEY (Tang),
 );
@@ -47,8 +47,6 @@ CREATE TABLE LoaiPhong
     MaLPh VARCHAR(4) check(MaLPh like '[A-Z][A-Z][A-Z][A-Z]'),
     LoaiPh NVARCHAR(100) NOT NULL UNIQUE,
     GiaPh NUMERIC(10,3)  DEFAULT 0 check(GiaPh >=0) UNIQUE,
-    DonVi NVARCHAR(100) check (DonVi IN(N'1 ngày')) DEFAULT N'1 ngày', 
-
 
     PRIMARY KEY (MaLPh),
 );
@@ -59,8 +57,7 @@ CREATE TABLE Phong
 (
     MaPh VARCHAR(5) check(MaPh like'[A-Z][A-Z][0-9][0-9][0-9]') NOT NULL,
     MaLPh VARCHAR(4) check(MaLPh like '[A-Z][A-Z][A-Z][A-Z]'),
-    Tang INT check(Tang >= 0 AND Tang <= 9) NOT NULL, 
-
+    Tang INT check(Tang >= 0 AND Tang <= 20) NOT NULL, 
 
     PRIMARY KEY (MaPh),
     FOREIGN KEY (MaLPh) REFERENCES LoaiPhong(MaLPh),
@@ -104,7 +101,7 @@ CREATE TABLE NhanVien
     DThoaiNV VARCHAR(10) NOT NULL check (DThoaiNV like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     DChiNV NVARCHAR(100) NOT NULL,
     MaCV VARCHAR(4) check(MACV like'[A-Z][A-Z][A-Z]') NOT NULL,
-    TangTruc INT check(TangTruc >= 0 AND TangTruc <= 9) NOT NULL,
+    TangTruc INT check(TangTruc >= 0 AND TangTruc <= 20) NOT NULL,
 
 
     PRIMARY KEY (MaNV),
@@ -164,9 +161,9 @@ Insert into Tang values ('9')
 
 
 
-Insert into LoaiPhong values ('GDON',N'Giường Đơn', '50.000', N'1 ngày')
-Insert into LoaiPhong values ('GDOI',N'Giường Đôi', '80.000', N'1 ngày')
-Insert into LoaiPhong values ('PGID',N'Phòng gia đình', '100.000', N'1 ngày')
+Insert into LoaiPhong values ('GDON',N'Giường Đơn', '50.000')
+Insert into LoaiPhong values ('GDOI',N'Giường Đôi', '80.000')
+Insert into LoaiPhong values ('PGID',N'Phòng gia đình', '100.000')
 
 
 
@@ -234,5 +231,6 @@ FROM ThuePhong tp,
 	) q
 WHERE q.MaPh = CTThuePhong.MaPh AND
 	  CTThuePhong.MaHD = tp.MaHD	
+
 
 
