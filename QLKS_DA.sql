@@ -115,32 +115,46 @@ GO
 
 CREATE TABLE ThuePhong
 (
-    MaHD VARCHAR(6) check(MAHD like'[A-Z][A-Z][0-9][0-9][0-9][0-9]') NOT NULL,
+    MaTP VARCHAR(6) check(MAHD like'[A-Z][A-Z][0-9][0-9][0-9][0-9]') NOT NULL,
     MaKH VARCHAR(4) check(MAKH like'[A-Z][0-9][0-9][0-9]') NOT NULL,
     MaNV VARCHAR(5) check(MaNV like'[A-Z][0-9][A-Z][0-9][0-9]')  NOT NULL,
+    MaPh VARCHAR(5) check(MAPh like'[A-Z][A-Z][0-9][0-9][0-9]')  NOT NULL,
     NgDen DATE NOT NULL, 
     NgDi DATE NOT NULL,
     SoNgay AS (DATEDIFF (day,NgDen,NgDi)) PERSISTED,
+    ThanhTien NUMERIC(18,3)  DEFAULT 0 check(TongTien >=0) NULL,
 
 
-    PRIMARY KEY (MaHD),
+
+
+    PRIMARY KEY (MaTP),
     FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
     FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    FOREIGN KEY (MaPh) REFERENCES Phong(MaPh),
 	CONSTRAINT ngden_khac_ngdi check (NgDen < NgDi),
 );
 GO
 
 
-CREATE TABLE CTThuePhong
+
+
+
+
+
+
+CREATE TABLE HoaDon
 (
     MaHD VARCHAR(6) check(MAHD like'[A-Z][A-Z][0-9][0-9][0-9][0-9]') NOT NULL,
-    MaPh VARCHAR(5) check(MAPh like'[A-Z][A-Z][0-9][0-9][0-9]')  NOT NULL,
-    TongTien NUMERIC(10,3)  DEFAULT 0 check(TongTien >=0) NULL,
+    MaKH VARCHAR(4) check(MAKH like'[A-Z][0-9][0-9][0-9]') NOT NULL,
+    MaTP VARCHAR(6) check(MAHD like'[A-Z][A-Z][0-9][0-9][0-9][0-9]') NOT NULL,
+    MaNV VARCHAR(5) check(MaNV like'[A-Z][0-9][A-Z][0-9][0-9]')  NOT NULL,
+    TongTien NUMERIC(18,3)  DEFAULT 0 check(TongTien >=0) NULL,
 
 
-    PRIMARY KEY (MaHD, MaPh),
-    FOREIGN KEY (MaHD) REFERENCES ThuePhong(MaHD),
-    FOREIGN KEY (MaPh) REFERENCES Phong(MaPh),
+    PRIMARY KEY (MaHD),
+    FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH),
+    FOREIGN KEY (MaNV) REFERENCES NhanVien(MaNV),
+    FOREIGN KEY (MaTP) REFERENCES ThuePhong(MaTP),
 );
 GO
 
@@ -193,16 +207,15 @@ Insert into NhanVien values ('T7B52', N'Lê Văn Điền', N'Nam', '0811762357',
 Insert into NhanVien values ('A1K59', N'Trần Thị Mai', N'Nữ', '0911237656', N'Tình An Giang, Phường Long Xuyên', 'QTT', '0')
 
 
-Insert into ThuePhong values ('KT5713', 'A195', 'A1K59', '2025-11-10', '2025-11-20')
-Insert into ThuePhong values ('HQ7783', 'D308', 'A1K59', '2025-10-20', '2025-11-05')
-Insert into ThuePhong values ('HT7873', 'D308', 'A1K59', '2025-12-30', '2026-01-20')
+Insert into ThuePhong values ('TT5713', 'A195', 'A1K59', 'GI920', '2025-11-10', '2025-11-20', NULL)
+Insert into ThuePhong values ('TQ7783', 'D308', 'A1K59', 'GN510', '2025-10-20', '2025-11-05', NULL)
+Insert into ThuePhong values ('TT7873', 'D308', 'A1K59', ‘GN510', '2025-12-30', '2026-01-20', NULL)
 
 
+Insert into HoaDon values ('HT5713', 'A195', 'TT5713', 'A1K59', NULL)
+Insert into HoaDon values ('HQ7783', 'D308', 'TQ7783', 'A1K59', NULL)
+Insert into HoaDon values ('HT7873', 'D308', 'TT7873', 'A1K59', NULL)
 
-
-Insert into CTThuePhong values ('KT5713', 'GI920', NULL)
-Insert into CTThuePhong values ('HQ7783', 'GN510', NULL)
-Insert into CTThuePhong values ('HT7873', 'GN510', NULL)
 
 
 SELECT*FROM Tang
@@ -216,11 +229,11 @@ SELECT*FROM NhanVien
 --SELECT*FROM LoaiPhong
 --SELECT*FROM Phong
 SELECT*FROM ThuePhong
-SELECT*FROM CTThuePhong
+SELECT*FROM HoaDon
 --chọn từ bảng ct thuê phòng
-UPDATE CTThuePhong
-SET TongTien = q.DonGia * tp.SoNgay
-FROM ThuePhong tp,
+UPDATE ThuePhong
+SET ThanhTien = q.DonGia * ThuePhong.SoNgay
+FROM 
 (
 	SELECT 
 		p.MaLPh,
@@ -229,8 +242,15 @@ FROM ThuePhong tp,
 	FROM LoaiPhong lp2, Phong p
 	where lp2.MaLPh = p.MaLPh
 	) q
-WHERE q.MaPh = CTThuePhong.MaPh AND
-	  CTThuePhong.MaHD = tp.MaHD	
+WHERE q.MaPh = ThuePhong.MaPh 
+	
+– 
+UPDATE HoaDon
+SET TongTien = tp.ThanhTien
+FROM ThuePhong tp
+WHERE tp.MaTP = HoaDon.MaTP
+
+
 
 
 
