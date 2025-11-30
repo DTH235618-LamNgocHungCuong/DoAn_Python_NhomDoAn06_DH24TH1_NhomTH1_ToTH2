@@ -82,16 +82,6 @@ CREATE TABLE KhachHang
 GO
 
 
-CREATE TABLE ChucVu
-(
-    MaCV VARCHAR(4) check(MACV like'[A-Z][A-Z][A-Z]') NOT NULL,
-    TenCV NVARCHAR (100) NOT NULL UNIQUE,
-
-
-    PRIMARY KEY (MaCV),
-);
-GO
-
 
 CREATE TABLE NhanVien
 (
@@ -100,12 +90,11 @@ CREATE TABLE NhanVien
     GioiTinhNV nvarchar (10) NOT NULL check (GioiTinhNV = N'Nam' or GioiTinhNV =  N'Nữ'),
     DThoaiNV VARCHAR(10) NOT NULL check (DThoaiNV like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     DChiNV NVARCHAR(100) NOT NULL,
-    MaCV VARCHAR(4) check(MACV like'[A-Z][A-Z][A-Z]') NOT NULL,
+    ChucVu NVARCHAR (100) NOT NULL
     TangTruc INT check(TangTruc >= 0 AND TangTruc <= 20) NOT NULL,
 	MatKhau VARCHAR(50) NOT NULL,
 
     PRIMARY KEY (MaNV),
-    FOREIGN KEY (MaCV) REFERENCES ChucVu(MaCV),
     FOREIGN KEY (TangTruc) REFERENCES Tang(Tang),
 
 
@@ -182,16 +171,9 @@ Insert into KhachHang values ('A195',N'Lê Thị Kim', N'Nữ', '0989457330',N'T
 
 
 
-
-Insert into ChucVu values ('DVS',N'Dọn vệ sinh')
-Insert into ChucVu values ('QTT',N'Tiếp tân')
-
-
-
-
-Insert into NhanVien values ('T8Z23', N'Nguyễn Thanh Kim', N'Nữ', '0876235117', N'Tình An Giang, Phường Long Xuyên', 'DVS', '8', 'KL3017')
-Insert into NhanVien values ('T7B52', N'Lê Văn Điền', N'Nam', '0811762357', N'Tình An Giang, Phường Long Xuyên', 'DVS', '7', '93433624')
-Insert into NhanVien values ('A1K59', N'Trần Thị Mai', N'Nữ', '0911237656', N'Tình An Giang, Phường Long Xuyên', 'QTT', '0', 'KPYFTYTG')
+Insert into NhanVien values ('T8Z23', N'Nguyễn Thanh Kim', N'Nữ', '0876235117', N'Tình An Giang, Phường Long Xuyên', N'Nhan viên dọn vệ sinh', '8', 'KL3017')
+Insert into NhanVien values ('T7B52', N'Lê Văn Điền', N'Nam', '0811762357', N'Tình An Giang, Phường Long Xuyên', N'Nhân viên dọn vệ sinh', '7', '93433624')
+Insert into NhanVien values ('A1K59', N'Trần Thị Mai', N'Nữ', '0911237656', N'Tình An Giang, Phường Long Xuyên', N'Tiếp tân', '0', 'KPYFTYTG')
 
 
 Insert into ThuePhong values ('TT5713', 'A195', 'A1K59', 'GI920', '2025-11-10', '2025-11-20', NULL)
@@ -236,6 +218,7 @@ UPDATE HoaDon
 SET TongTien = tp.ThanhTien
 FROM ThuePhong tp
 WHERE tp.MaTP = HoaDon.MaTP
+
 
 
 
