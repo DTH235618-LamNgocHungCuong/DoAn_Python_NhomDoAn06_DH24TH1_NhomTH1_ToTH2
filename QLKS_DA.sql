@@ -42,25 +42,15 @@ CREATE TABLE Tang
 GO
 
 
-CREATE TABLE LoaiPhong
-(
-    MaLPh VARCHAR(4) check(MaLPh like '[A-Z][A-Z][A-Z][A-Z]'),
-    LoaiPh NVARCHAR(100) NOT NULL UNIQUE,
-    GiaPh NUMERIC(10,3)  DEFAULT 0 check(GiaPh >=0) UNIQUE,
-
-    PRIMARY KEY (MaLPh),
-);
-GO
-
 
 CREATE TABLE Phong
 (
     MaPh VARCHAR(5) check(MaPh like'[A-Z][A-Z][0-9][0-9][0-9]') NOT NULL,
-    MaLPh VARCHAR(4) check(MaLPh like '[A-Z][A-Z][A-Z][A-Z]'),
+	LoaiPh NVARCHAR(100) NOT NULL UNIQUE,
+    GiaPh NUMERIC(10,3)  DEFAULT 0 check(GiaPh >=0) UNIQUE,
     Tang INT check(Tang >= 0 AND Tang <= 20) NOT NULL, 
 
     PRIMARY KEY (MaPh),
-    FOREIGN KEY (MaLPh) REFERENCES LoaiPhong(MaLPh),
     FOREIGN KEY (Tang) REFERENCES Tang(Tang),
 );
 GO
@@ -149,19 +139,10 @@ Insert into Tang values ('8')
 Insert into Tang values ('9')
 
 
-
-
-Insert into LoaiPhong values ('GDON',N'Giường Đơn', '50.000')
-Insert into LoaiPhong values ('GDOI',N'Giường Đôi', '80.000')
-Insert into LoaiPhong values ('PGID',N'Phòng gia đình', '100.000')
-
-
-
-
-Insert into Phong values ('GG133','PGID','1')
-Insert into Phong values ('GI320','GDOI','3')
-Insert into Phong values ('GN510','GDON','5')
-Insert into Phong values ('GI920','GDOI','9')
+Insert into Phong values ('GG133',N'Phòng gia đình', '100.000')
+Insert into Phong values ('GI320',N'Giường Đôi', '80.000')
+Insert into Phong values ('GN510',N'Giường Đơn', '50.000','5')
+Insert into Phong values ('GI920',N'Giường Đôi', '80.000')
 
 
 
@@ -218,6 +199,7 @@ UPDATE HoaDon
 SET TongTien = tp.ThanhTien
 FROM ThuePhong tp
 WHERE tp.MaTP = HoaDon.MaTP
+
 
 
 
