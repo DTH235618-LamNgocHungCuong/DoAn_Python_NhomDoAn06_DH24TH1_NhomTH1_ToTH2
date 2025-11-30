@@ -186,11 +186,9 @@ SET ThanhTien = q.DonGia * ThuePhong.SoNgay
 FROM 
 (
 	SELECT 
-		p.MaLPh,
 		p.MaPh,
-		lp2.GiaPh AS DonGia
-	FROM LoaiPhong lp2, Phong p
-	where lp2.MaLPh = p.MaLPh
+		p.GiaPh AS DonGia
+	FROM Phong p
 	) q
 WHERE q.MaPh = ThuePhong.MaPh 
 	
@@ -199,6 +197,7 @@ UPDATE HoaDon
 SET TongTien = tp.ThanhTien
 FROM ThuePhong tp
 WHERE tp.MaTP = HoaDon.MaTP
+
 
 
 
