@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk, messagebox
 #from tkcalendar import DateEntry
 from datetime import datetime, date
-#from SQL_connec import conn, cur
+from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
 
 def open_Tang():
@@ -58,7 +58,7 @@ def open_Tang():
        entry_st.delete(0, END)
 
    def load_data():
-       '''
+       
        if conn is None or cur is None:
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
@@ -69,7 +69,7 @@ def open_Tang():
                tree.insert("", END, values=row)
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
-       '''
+       
 
    def them_tang():
        tang = entry_st.get()
@@ -82,7 +82,7 @@ def open_Tang():
            messagebox.showwarning("Số tầng không đúng quy định", "Vui lòng nhập lại thông tin")
            return
 
-       '''
+       
        try:
            # kt xem tang có bị trùng ko
            cur.execute("SELECT COUNT(*) FROM Tang where Tang = %s", (tang,))
@@ -98,7 +98,7 @@ def open_Tang():
            messagebox.showinfo("Thành công", "Đã thêm tầng mới")
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
-       '''
+       
 
    def xoa_tang():
        selected = tree.selection()
@@ -109,7 +109,7 @@ def open_Tang():
        confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa loại phòng?")
        if not confirm:
            return
-       '''
+       
        try:
            cur.execute("DELETE FROM Tang where Tang=%s", (tang,))
            conn.commit()
@@ -117,7 +117,7 @@ def open_Tang():
            messagebox.showinfo("Đã xoá")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
-       '''
+       
 
    def sua_tang():
        selected = tree.selection()
@@ -141,7 +141,7 @@ def open_Tang():
    def luu_tang():
        tang = entry_st.get()
 
-       '''
+       
        try:
            cur.execute("""UPDATE Tang SET Tang=%s""", (tang))
            conn.commit()
@@ -150,7 +150,7 @@ def open_Tang():
            messagebox.showinfo("Thành công", "Cập nhật thành công.")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
-       '''
+       
 
    frame_btn = Frame(rootT)
    frame_btn.pack(padx=5, pady=5, anchor="center")
@@ -161,5 +161,8 @@ def open_Tang():
    Button(frame_btn, text="Xoá", width=8, command=xoa_tang).grid(row=1, column=1, padx=5)
    Button(frame_btn, text="Thoát", width=8, command=rootT.quit).grid(row=0, column=2, padx=5)
 
+   load_data()
+
    rootT.mainloop()
+
 
