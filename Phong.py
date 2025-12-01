@@ -60,6 +60,89 @@ def open_Phong():
    for col in columns:
        tree.heading(col, text=col.title())
 
+   tree.column("Mã phòng", width=60, anchor="center")
+   tree.column("Loại Phòng", width=150)
+   tree.column("Giá Phòng", width=150)
    tree.column("Tầng", width=60, anchor="center")
 
    tree.pack(padx=5, pady=10, fill="x")
+
+   def kt_sTang(tang):
+       if tang>=0 and tang<=20:
+           return True
+       else:
+           return False
+
+   def kt_maph(maph):
+       soma = len(maph)
+       if soma != 5:
+           return False
+       if maph[0].isupper() and maph[1].isupper() and maph[2].isdigit() and maph[3].isdigit() and maph[4].isdigit():
+           return True
+       else:
+           return False
+
+
+   def load_tang_combobox():
+       try:
+           cur.execute("select * from Tang")
+           tang_data = cur.fetchall()
+           tang_list = [row[1] for row in tang_data]
+           entry_st["values"] = tang_list
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi load số tầng{e}")
+
+   def clear_input():
+       entry_st.delete(0, END)
+       entry_lp.delete(0, END)
+       entry_gp.delete(0, END)
+       entry_st.delete(0, END)
+
+   def load_data():
+       '''
+       if conn is None or cur is None:
+           messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
+           return
+       tree.delete(*tree.get_children())
+       try:
+           cur.execute("SELECT * FROM Phong")
+           for row in cur.fetchall():
+               tree.insert("", END, values=row)
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
+       '''
+
+   def them_phong():
+       maph = entry_st.get()
+       loaiphong = entry_lp.get()
+       giaphong = entry_gp.get()
+       tang = entry_st.get()
+
+       if maph == "" or loaiphong == "" or giaphong == "" or tang == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       if kt_maph(maph) == False:
+           messagebox.showerror("Lỗi","MaPh không hợp lệ")
+           return
+
+
+       try:
+           # kt xem tang có bị trùng ko
+           cur.execute("SELECT COUNT(*) FROM Phong where MaPh = %s", (maph,))
+
+           if cur.fetchone()[0] > 0:
+               messagebox.showwarning("Trùng lập", f"Phòng {maph} đã tồn tại")
+               return
+
+           cur.execute("Insert into Phong (MaPh, LoaiPh, GiaPh, Tang) VALUES (%s, %s, %s, %s)", (maph, loaiphong,giaphong,tang))
+           conn.commit()
+           load_data()
+           clear_input()
+           messagebox.showinfo("Thành công", "Đã thêm phòng mới")
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"{e}")
+
+
+
+
