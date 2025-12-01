@@ -56,7 +56,6 @@ CREATE TABLE KhachHang
 (
     MaKH VARCHAR(4) check(MAKH like'[A-Z][0-9][0-9][0-9]') NOT NULL,
     TenKH NVARCHAR (100) NOT NULL UNIQUE,
-    GioiTinhKH nvarchar (10) NOT NULL check (GioiTinhKH = N'Nam' or GioiTinhKH =  N'Nữ'),
     DThoaiKH VARCHAR(10) NOT NULL check (DThoaiKH like '[0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9][0-9]'),
     DChiKH NVARCHAR(100) NOT NULL,
 
@@ -130,22 +129,22 @@ Insert into Tang values ('8')
 Insert into Tang values ('9')
 
 
-Insert into Phong values ('GG133',N'Phòng gia đình', '100.000','1')
-Insert into Phong values ('GI320',N'Giường Đôi', '80.000','3')
-Insert into Phong values ('GN510',N'Giường Đơn', '50.000','5')
-Insert into Phong values ('GI920',N'Giường Đôi', '80.000','9')
+Insert into Phong values ('GG133',N'Giađình', '100.000','1')
+Insert into Phong values ('GI320',N'Đôi', '80.000','3')
+Insert into Phong values ('GN510',N'Đơn', '50.000','5')
+Insert into Phong values ('GI920',N'Đôi', '80.000','9')
 
 
 
 
-Insert into KhachHang values ('D308',N'Trần Quan Chiến', N'Nam', '0999457223',N'Tình An Giang, Phường Long Xuyên')
-Insert into KhachHang values ('A195',N'Lê Thị Kim', N'Nữ', '0989457330',N'Tình An Giang, Phường Long Xuyên')
+Insert into KhachHang values ('D308',N'Trần_Quan_Chiến', '0999457223',N'Tỉnh_An_Giang, Phường_Long_Xuyên')
+Insert into KhachHang values ('A195',N'Lê_Thị_Kim', '0989457330',N'Tỉnh_An_Giang, Phường_Long_Xuyên')
 
 
 
-Insert into NhanVien values ('T8Z23',N'Nguyễn Thanh Kim',N'Nữ','0876235117',N'Tình An Giang, Phường Long Xuyên',N'Nhan viên dọn vệ sinh','8','KL3017')
-Insert into NhanVien values ('T7B52', N'Lê Văn Điền', N'Nam', '0811762357', N'Tình An Giang, Phường Long Xuyên',N'Nhân viên dọn vệ sinh','7','93433624')
-Insert into NhanVien values ('A1K59', N'Trần Thị Mai', N'Nữ', '0911237656', N'Tình An Giang, Phường Long Xuyên',N'Tiếp tân', '0', 'KPYFTYTG')
+Insert into NhanVien values ('T8Z23',N'Nguyễn_Thanh_Kim',N'Nữ','0876235117',N'Tình_An_Giang, Phường_Long_Xuyên',N'Nhan_viên_dọn_vệ_sinh','8','KL3017')
+Insert into NhanVien values ('T7B52', N'Lê_Văn_Điền', N'Nam', '0811762357', N'Tình_An_Giang, Phường_Long_Xuyên',N'Nhân_viên_dọn_vệ_sinh','7','93433624')
+Insert into NhanVien values ('A1K59', N'Trần_Thị_Mai', N'Nữ', '0911237656', N'Tình_An_Giang, Phường_Long_Xuyên',N'Tiếp_tân', '0', 'KPYFTYTG')
 
 
 Insert into ThuePhong values ('TT5713', 'A195', 'A1K59', 'GI920', '2025-11-10', '2025-11-20', NULL)
@@ -163,7 +162,6 @@ SELECT*FROM Tang
 SELECT*FROM Phong
 SELECT*FROM KhachHang
 SELECT*FROM NhanVien
---SELECT*FROM Phong
 SELECT*FROM ThuePhong
 SELECT*FROM HoaDon
 --chọn từ bảng ct thuê phòng
@@ -182,4 +180,5 @@ UPDATE HoaDon
 SET TongTien = tp.ThanhTien
 FROM ThuePhong tp
 WHERE tp.MaTP = HoaDon.MaTP
+
 
