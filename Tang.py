@@ -63,9 +63,12 @@ def open_Tang():
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
        tree.delete(*tree.get_children())
-       cur.execute("SELECT * FROM Tang")
-       for row in cur.fetchall():
-           tree.insert("", END, values=row)
+       try:
+           cur.execute("SELECT * FROM Tang")
+           for row in cur.fetchall():
+               tree.insert("", END, values=row)
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
        '''
 
    def them_tang():
@@ -159,3 +162,4 @@ def open_Tang():
    Button(frame_btn, text="Thoát", width=8, command=rootT.quit).grid(row=0, column=2, padx=5)
 
    rootT.mainloop()
+
