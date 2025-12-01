@@ -27,7 +27,7 @@ def open_Phong():
    entry_mp.grid(row=1, column=1)
 
    Label(frame, text="Loại phòng:", font=("Times New Roman", 14)).grid(row=1, column=2)
-   entry_lp = ttk.Combobox(frame, width=10, values=["Giường Đơn", "Giường Đôi", "Phòng gia đình"])
+   entry_lp = ttk.Combobox(frame, width=10, values=["Đơn", "Đôi", "Giađình"])
    entry_lp.grid(row=1, column=3)
 
    Label(frame, text="Giá phòng:", font=("Times New Roman", 14)).grid(row=2, column=0)
@@ -37,6 +37,8 @@ def open_Phong():
    Label(frame, text="Tầng:", font=("Times New Roman", 14)).grid(row=2, column=2)
    entry_st = ttk.Combobox(frame, width=10, state="readonly")
    entry_st.grid(row=2, column=3)
+
+
 
    frame.pack(padx=4, pady=4, anchor="center")
 
@@ -59,12 +61,13 @@ def open_Phong():
    tree.pack(side="left", expand=True)
    for col in columns:
        tree.heading(col, text=col.title())
-
+       tree.column(col, width=150, anchor="center")
+   '''
    tree.column("Mã phòng", width=60, anchor="center")
-   tree.column("Loại Phòng", width=150)
+   tree.column("Loại phòng", width=150)
    tree.column("Giá Phòng", width=150)
    tree.column("Tầng", width=60, anchor="center")
-
+   '''
    tree.pack(padx=5, pady=10, fill="x")
 
    def kt_maph(maph):
@@ -199,6 +202,7 @@ def open_Phong():
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
 
    frame_btn = Frame(rootP)
+   frame_btn.pack(padx=5, pady=5, anchor="center")
 
    Button(frame_btn, text="Thêm", width=8, command=them_phong).grid(row=0, column=0, padx=5)
    Button(frame_btn, text="Lưu", width=8, command=luu_phong).grid(row=0, column=1, padx=5)
@@ -206,7 +210,7 @@ def open_Phong():
    Button(frame_btn, text="Xoá", width=8, command=xoa_phong).grid(row=1, column=1, padx=5)
    Button(frame_btn, text="Thoát", width=8, command=rootP.quit).grid(row=0, column=2, padx=5)
 
-   frame_btn.pack(padx=5, pady=5, anchor="center")
+   
 
    load_data()
    load_tang_combobox()
