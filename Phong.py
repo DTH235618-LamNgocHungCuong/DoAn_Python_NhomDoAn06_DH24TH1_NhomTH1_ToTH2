@@ -2,11 +2,11 @@ from tkinter import *
 from tkinter import ttk, messagebox
 #from tkcalendar import DateEntry
 from datetime import datetime, date
-#from SQL_connec import conn, cur
+from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
 
 def open_Phong():
-   def center_window(win, w=800, h=600):
+   def center_window(win, w=800, h=700):
        ws = win.winfo_screenwidth()
        hs = win.winfo_screenheight()
        x = (ws // 2) - (w // 2)
@@ -15,7 +15,7 @@ def open_Phong():
 
    rootP = Tk()
    rootP.title("Quản lý Tầng")
-   rootP.minsize(800, 600)
+   rootP.minsize(800, 700)
    center_window(rootP)
 
    Label(rootP, text="QUẢN LÝ PHÒNG", font=("Times New Roman", 18, "bold")).pack(pady=5)
@@ -34,11 +34,11 @@ def open_Phong():
    entry_gp = Entry(frame, width=10)
    entry_gp.grid(row=2, column=1)
 
-   Label(frame, text="Tầng:", font=("Times New Roman", 14)).grid(row=1, column=0)
+   Label(frame, text="Tầng:", font=("Times New Roman", 14)).grid(row=2, column=2)
    entry_st = ttk.Combobox(frame, width=10, state="readonly")
-   entry_st.grid(row=1, column=1)
+   entry_st.grid(row=2, column=3)
 
-   frame.pack(padx=5, pady=4, anchor="center")
+   frame.pack(padx=4, pady=4, anchor="center")
 
 
 
@@ -67,12 +67,6 @@ def open_Phong():
 
    tree.pack(padx=5, pady=10, fill="x")
 
-   def kt_sTang(tang):
-       if tang>=0 and tang<=20:
-           return True
-       else:
-           return False
-
    def kt_maph(maph):
        soma = len(maph)
        if soma != 5:
@@ -99,7 +93,7 @@ def open_Phong():
        entry_st.delete(0, END)
 
    def load_data():
-       '''
+       
        if conn is None or cur is None:
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
@@ -110,7 +104,7 @@ def open_Phong():
                tree.insert("", END, values=row)
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
-       '''
+       
 
    def them_phong():
        maph = entry_st.get()
@@ -143,6 +137,81 @@ def open_Phong():
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
 
+   def xoa_phong():
+       selected = tree.selection()
+       if not selected:
+           messagebox.showwarning("Chưa chon", "Hãy chọn 1 dòng để xoá")
+           return
+       phong = tree.item(selected, "values")[0]
+       confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa phòng?")
+       if not confirm:
+           return
+       
+       try:
+           cur.execute("DELETE FROM Phong where MaPh=%s", (phong,))
+           conn.commit()
+           load_data()
+           messagebox.showinfo("Đã xoá")
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+   def sua_phong():
+       selected = tree.selection()
+       if not selected:
+           messagebox.showwarning("Chưa chọn", "Hãy chọn loại phòng để sửa")
+           return
+       values = tree.item(selected)["values"]
+       entry_mp.delete(0, END)
+       entry_mp.insert(0, values[0]) #khóa
+       entry_mp.config(state='disabled')
+       entry_lp.delete(0, END)
+       entry_lp.config(0, values[1])
+       entry_gp.delete(0, END)
+       entry_gp.insert(0, values[2])
+       entry_st.delete(0, END)
+       entry_st.insert(0, values[3])
+
+       maph = entry_st.get()
+       loaiphong = entry_lp.get()
+       giaphong = entry_gp.get()
+       tang = entry_st.get()
+
+       if maph == "" or loaiphong == "" or giaphong == "" or tang == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       if kt_maph(maph) == False:
+           messagebox.showerror("Lỗi","MaPh không hợp lệ")
+           return
+       
+   def luu_phong():
+       maph = entry_st.get()
+       loaiphong = entry_lp.get()
+       giaphong = entry_gp.get()
+       tang = entry_st.get()
+      
+       try:
+           cur.execute("""UPDATE Phong SET MaPh=%s, LoaiPh=%s, GiaPh=%s, Tang=%s""", (maph,loaiphong,giaphong,tang))
+           conn.commit()
+           load_data()
+           clear_input()
+           messagebox.showinfo("Thành công", "Cập nhật thành công.")
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+
+   frame_btn = Frame(rootP)
+
+   Button(frame_btn, text="Thêm", width=8, command=them_phong).grid(row=0, column=0, padx=5)
+   Button(frame_btn, text="Lưu", width=8, command=luu_phong).grid(row=0, column=1, padx=5)
+   Button(frame_btn, text="Sửa", width=8, command=sua_phong).grid(row=1, column=0, padx=5)
+   Button(frame_btn, text="Xoá", width=8, command=xoa_phong).grid(row=1, column=1, padx=5)
+   Button(frame_btn, text="Thoát", width=8, command=rootP.quit).grid(row=0, column=2, padx=5)
+
+   frame_btn.pack(padx=5, pady=5, anchor="center")
+
+   load_data()
+   load_tang_combobox()
+
+   rootP.mainloop()
 
 
 
