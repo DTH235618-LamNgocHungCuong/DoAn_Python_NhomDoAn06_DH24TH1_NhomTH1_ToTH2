@@ -158,7 +158,7 @@ def open_KhachHang():
    def sua_KH():
        selected = tree.selection()
        if not selected:
-           messagebox.showwarning("Chưa chọn", "Hãy chọn loại phòng để sửa")
+           messagebox.showwarning("Chưa chọn", "Hãy chọn khách hàng để sửa")
            return
        values = tree.item(selected)["values"]
        entry_mkh.delete(0, END)
@@ -213,5 +213,6 @@ def open_KhachHang():
    
 
    load_data()
+
 
    rootKH.mainloop()
