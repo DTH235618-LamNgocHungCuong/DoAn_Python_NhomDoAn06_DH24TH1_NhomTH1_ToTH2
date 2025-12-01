@@ -49,7 +49,7 @@ def open_Tang():
    tree.pack(padx=5, pady=10, fill="x")
 
    def kt_sTang(tang):
-       if tang>=0 and tang<=20:
+       if tang.isdigit() and tang>=0 and tang<=20:
            return True
        else:
            return False
@@ -164,5 +164,6 @@ def open_Tang():
    load_data()
 
    rootT.mainloop()
+
 
 
