@@ -217,5 +217,7 @@ def open_Phong():
 
    rootP.mainloop()
 
+   rootP.mainloop()
+
 
 
