@@ -1,18 +1,18 @@
 from tkinter import *
 from tkinter import ttk, messagebox
-#import pyodbc
+import pyodbc
 #from tkcalendar import DateEntry
 #import mysql.connector
-'''
+
 def connect_db():
    try:
        conn = pyodbc.connect(
            "DRIVER={ODBC Driver 17 for SQL Server};"
-           "SERVER=lLIB-SV304\SQL;"
+           "SERVER=Lib-324;"
            "DATABASE=QLKS_DA;"
-           "Trusted_Connection=no;"
+           "Trusted_Connection=yes;"
        )
-       print("Kết nối thành cngg.")
+       print("Kết nối thành cong.")
        return conn
    except Exception as err:
        print("Lỗi kết nối MySQL:", err)
@@ -20,7 +20,7 @@ def connect_db():
 
 
 
-
+'''
 def connect_db():
    try:
        conn =  mysql.connector.connect(
@@ -34,7 +34,7 @@ def connect_db():
    except mysql.connector.Error as err:
        print("Lỗi kết nối MySQL:", err)
        return None
-
+'''
 
 
 
@@ -43,4 +43,4 @@ if conn:
    cur = conn.cursor()
 else:
    cur = None
-'''
+
