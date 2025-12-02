@@ -12,7 +12,7 @@ from HoaDon import open_HoaDon
 
 
 def mo_menu(quyen):
-   def center_window(win, w=700, h=700):
+   def center_window(win, w=400, h=400):
        ws = win.winfo_screenwidth()
        hs = win.winfo_screenheight()
        x = (ws // 2) - (w // 2)
@@ -22,7 +22,7 @@ def mo_menu(quyen):
 
    rootM = Tk()
    rootM.title("Menu Quản lý khách sạn")
-   rootM.minsize(width = 700, height = 700)
+   rootM.minsize(width = 400, height = 400)
    center_window(rootM)
 
 
@@ -42,3 +42,4 @@ def mo_menu(quyen):
        button['state'] = DISABLED
 
    rootM.mainloop()
+
