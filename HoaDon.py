@@ -4,6 +4,7 @@ from tkcalendar import DateEntry
 from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
+from Menu import mo_menu
 
 def open_HoaDon():
    def center_window(win, w=800, h=700):
@@ -47,7 +48,7 @@ def open_HoaDon():
    frame_bang = Frame(rootHD)
    frame_bang.pack(pady=5, expand=True)
 
-   columns = ("Mã hoá đơn", "Mã khách hàng", "Mã thuê phòng", "Mã nhân viên", "Tổng tiền")  # cần dấu phẩy ở cuối
+   columns = ("Mã_hoá_đơn", "Mã_khách_hàng", "Mã_thuê_phòng", "Mã_nhân_viên", "Tổng_tiền")  # cần dấu phẩy ở cuối
    tree = ttk.Treeview(frame_bang, columns=columns, show="headings", height=10)
 
    # Thanh cuộn
@@ -59,17 +60,17 @@ def open_HoaDon():
    scroll_x.pack(side="bottom", fill="x")
    tree.pack(side="left", expand=True)
 
-   tree.heading("Mã hoá đơn", text="Mã hoá đơn")
-   tree.heading("Mã khách hàng", text="Mã khách hàng")
-   tree.heading("Mã thuê phòng", text="Mã thuê phòng")
-   tree.heading("Mã nhân viên", text="Mã nhân viên")
-   tree.heading("Tổng tiền", text="Tổng tiền")
+   tree.heading("Mã_hoá_đơn", text="Mã_hoá_đơn")
+   tree.heading("Mã_khách_hàng", text="Mã_khách_hàng")
+   tree.heading("Mã_thuê_phòng", text="Mã_thuê_phòng")
+   tree.heading("Mã_nhân_viên", text="Mã_nhân_viên")
+   tree.heading("Tổng_tiền", text="Tổng_tiền")
 
-   tree.column("Mã hoá đơn", width=100, anchor="center")
-   tree.column("Mã khách hàng", width=100, anchor="center")
-   tree.column("Mã thuê phòng", width=100, anchor="center")
-   tree.column("Mã nhân viên", width=100, anchor="center")
-   tree.column("Tổng tiền", width=100, anchor="center")
+   tree.column("Mã_hoá_đơn", width=100, anchor="center")
+   tree.column("Mã_khách_hàng", width=100, anchor="center")
+   tree.column("Mã_thuê_phòng", width=100, anchor="center")
+   tree.column("Mã_nhân_viên", width=100, anchor="center")
+   tree.column("Tổng_tiền", width=100, anchor="center")
 
    tree.pack(padx=5, pady=10, fill="x")
 
@@ -83,60 +84,63 @@ def open_HoaDon():
            return False
 
    def load_manv_combobox():
+       
        try:
            cur.execute("select MaNV from NhanVien")
            manv_data = cur.fetchall()
-           manv_list = [row[1] for row in manv_data]
+           manv_list = [row[0] for row in manv_data]
            entry_mnv["values"] = manv_list
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load mã nhân viên{e}")
+       
 
    def load_matp_combobox():
+       
        try:
            cur.execute("select MaTP from ThuePhong")
            matp_data = cur.fetchall()
-           matp_list = [row[1] for row in matp_data]
+           matp_list = [row[0] for row in matp_data]
            entry_mtp["values"] = matp_list
        except Exception as e:
-           messagebox.showerror("Lỗi", f"Lỗi load mã nhân viên{e}")
-
+           messagebox.showerror("Lỗi", f"Lỗi load mã nhân viên{e}")       
 
    def lay_thanhtien_va_makh_tu_thuephong():
+       
        try:
            matp = entry_mtp.get()
-           cur.execute("select ThanhTien from ThuePhong where MaTP = %s", (matp,))
+           cur.execute("SELECT ThanhTien, MaKH FROM ThuePhong WHERE MaTP = %s", (matp,))
            matp_data = cur.fetchall()
+
            if not matp_data:
                 messagebox.showwarning("Không tìm thấy mã thuê phòng", "Vui lòng nhập lại thông tin")
                 return None, None
-           tongtien = float(matp_data[0])
-           cur.execute("select MaKH from ThuePhong")
-           makh_data = cur.fetchall()
-           if not makh_data:
-               messagebox.showwarning("Không tìm thấy mã thuê phòng", "Vui lòng nhập lại thông tin")
-               return None, None
-           makh = float(makh_data[0])
+           
+           tongtien = float(matp_data[0][0])
+           makh = matp_data[0][1]
+
            return tongtien, makh
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi tính tổng tiền{e}")
            return None, None
+       
 
    def hien_tongtien_va_makh():
        matp = entry_mtp.get()
        if matp != "":
            tongtien, makh = lay_thanhtien_va_makh_tu_thuephong()
-           if tongtien is not None and makh is not None:
+           if tongtien is not None or makh is not None:
                entry_tot.config(text=str(tongtien))
                entry_mkh.config(text=str(makh))
 
    def clear_input():
        entry_mhd.delete(0, END)
        entry_mkh.config(text="")
-       entry_mtp.delete(0, END)
-       entry_mnv.delete(0, END)
+       entry_mtp.set("")
+       entry_mnv.set("")
        entry_tot.config(text="")
 
    def load_data():
+       
        if conn is None or cur is None:
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
@@ -147,6 +151,7 @@ def open_HoaDon():
                tree.insert("", "end", values=row)
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
+       
 
    def them_HD():
        mahd = entry_mhd.get()
@@ -164,7 +169,7 @@ def open_HoaDon():
        tongtien, makh = lay_thanhtien_va_makh_tu_thuephong()
        if tongtien is None and makh is None:
            return
-
+       
        try:
            # kt xem tang có bị trùng ko
            cur.execute("SELECT COUNT(*) FROM HoaDon where MaHD = %s", (mahd,))
@@ -173,7 +178,7 @@ def open_HoaDon():
                messagebox.showwarning("Trùng lập", f"Hoá đơn {mahd} đã tồn tại")
                return
 
-           cur.execute("Insert into HoaDon (MaHD, MaKH, MaTP, MaNV, TongTien) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+           cur.execute("Insert into HoaDon (MaHD, MaKH, MaTP, MaNV, TongTien) VALUES (%s, %s, %s, %s, %s)",
                        (mahd, makh, matp, manv,tongtien))
            conn.commit()
            load_data()
@@ -181,6 +186,7 @@ def open_HoaDon():
            messagebox.showinfo("Thành công", "Đã thêm hoá đơn")
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
+       
 
    def xoa_HD():
        selected = tree.selection()
@@ -191,14 +197,15 @@ def open_HoaDon():
        confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa phòng?")
        if not confirm:
            return
-
+       
        try:
            cur.execute("DELETE FROM HoaDon where MaHD=%s", (mahd,))
            conn.commit()
            load_data()
-           messagebox.showinfo("Đã xoá")
+           messagebox.showinfo("Thành công", "Đã xoá")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+       
 
    def sua_HD():
        selected = tree.selection()
@@ -210,10 +217,8 @@ def open_HoaDon():
        entry_mhd.insert(0, values[0])
        entry_mhd.config(state='disabled')
        entry_mkh.config(text=values[1])
-       entry_mtp.delete(0, END)
-       entry_mtp.insert(0, values[2])
-       entry_mnv.delete(0, END)
-       entry_mnv.insert(0, values[3])
+       entry_mtp.set(values[2])
+       entry_mnv.set(values[3])
        entry_tot.config(text=values[4])
 
        mahd = entry_mhd.get()
@@ -240,17 +245,21 @@ def open_HoaDon():
        tongtien, makh = lay_thanhtien_va_makh_tu_thuephong()
        if tongtien is None and makh is None:
            return
-
+       
        try:
            cur.execute(
-               """UPDATE HoaDon SET MaHD=%s, MaKH=%s, MaTP=%s, MaNV=%s, TongTien=%s""",
-               (mahd, makh, matp, manv, tongtien))
+               """UPDATE HoaDon SET MaKH=%s, MaTP=%s, MaNV=%s, TongTien=%s where MaHD=%s""",
+               (makh, matp, manv, tongtien, mahd))
            conn.commit()
            load_data()
            clear_input()
            messagebox.showinfo("Thành công", "Cập nhật thành công.")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+       
+   def thoat_HD():
+       rootHD.destroy()
+       mo_menu()
 
    frame_btn = Frame(rootHD)
    frame_btn.pack(padx=5, pady=5, anchor="center")
@@ -259,7 +268,7 @@ def open_HoaDon():
    Button(frame_btn, text="Lưu", width=8, command=luu_HD).grid(row=0, column=1, padx=5)
    Button(frame_btn, text="Sửa", width=8, command=sua_HD).grid(row=1, column=0, padx=5)
    Button(frame_btn, text="Xoá", width=8, command=xoa_HD).grid(row=1, column=1, padx=5)
-   Button(frame_btn, text="Thoát", width=8, command=rootHD.quit).grid(row=0, column=2, padx=5)
+   Button(frame_btn, text="Thoát", width=8, command=thoat_HD).grid(row=0, column=2, padx=5)
    
    load_data()
    load_matp_combobox()
@@ -267,4 +276,5 @@ def open_HoaDon():
    hien_tongtien_va_makh()
    
    rootHD.mainloop()
+  
   
