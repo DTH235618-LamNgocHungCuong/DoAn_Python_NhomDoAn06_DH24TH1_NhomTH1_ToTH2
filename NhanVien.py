@@ -162,13 +162,13 @@ def open_NhanVien():
        try:
            manv = suaten(manv)
            # kt xem tang có bị trùng ko
-           cur.execute("SELECT COUNT(*) FROM NhanVien where MaNV = %s", (manv,))
+           cur.execute("SELECT COUNT(*) FROM NhanVien where MaNV = ?", (manv,))
 
            if cur.fetchone()[0] > 0:
                messagebox.showwarning("Trùng lập", f"Nhân viên {manv} đã tồn tại")
                return
 
-           cur.execute("Insert into NhanVien (MaNV, TenNV, GioiTinhNV, DThoaiNV, DChiNV, ChucVu, TangTruc, MatKhau) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+           cur.execute("Insert into NhanVien (MaNV, TenNV, GioiTinhNV, DThoaiNV, DChiNV, ChucVu, TangTruc, MatKhau) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                        (manv,tennv,gioitinh,dthoai,dchi,chucvu,tangtruc,matkhau))
            conn.commit()
            load_data()
@@ -189,7 +189,7 @@ def open_NhanVien():
            return
        
        try:
-           cur.execute("DELETE FROM NhanVien where MaNV=%s", (manv,))
+           cur.execute("DELETE FROM NhanVien where MaNV=?", (manv,))
            conn.commit()
            load_data()
            messagebox.showinfo("Thành cônc", "Đã xoá")
@@ -259,7 +259,7 @@ def open_NhanVien():
 
        
        try:
-           cur.execute("""UPDATE NhanVien SET TenNV=%s, GioiTinhNV=%s, DThoaiNV=%s, DChiNV=%s, ChucVu=%s, TangTruc=%s, MatKhau=%s where MaNV=%s""",
+           cur.execute("""UPDATE NhanVien SET TenNV=?, GioiTinhNV=?, DThoaiNV=?, DChiNV=?, ChucVu=?, TangTruc=?, MatKhau=? where MaNV=?""",
                        (tennv, gioitinh, dthoai, dchi, chucvu, tangtruc, matkhau, manv))
            conn.commit()
            load_data()
