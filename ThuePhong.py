@@ -196,6 +196,10 @@ def open_Phong():
            messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
            return
 
+       if kt_matp(matp) == False:
+           messagebox.showerror("Lỗi", "MaTP không hợp lệ")
+           return
+
        songay, thanhtien = tinh_songay_va_thanhtien()
        if songay is None or thanhtien is None:
            return
@@ -266,12 +270,12 @@ def open_Phong():
            messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
            return
 
-       songay, thanhtien = tinh_songay_va_thanhtien()
-       if songay is None or thanhtien is None:
-           return
-
        if kt_matp(matp) == False:
            messagebox.showerror("Lỗi", "MaTP không hợp lệ")
+           return
+
+       songay, thanhtien = tinh_songay_va_thanhtien()
+       if songay is None or thanhtien is None:
            return
 
    def luu_TP():
