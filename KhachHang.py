@@ -4,7 +4,6 @@ from tkinter import ttk, messagebox
 from datetime import datetime, date
 #from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
-from Menu import mo_menu
 
 def open_KhachHang():
    def center_window(win, w=900, h=700):
@@ -204,7 +203,6 @@ def open_KhachHang():
 
    def thoat_KH():
        rootKH.destroy()
-       mo_menu()
 
 
    frame_btn = Frame(rootKH)
@@ -222,5 +220,6 @@ def open_KhachHang():
 
 
    rootKH.mainloop()
+
 
 
