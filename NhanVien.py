@@ -4,6 +4,7 @@ from tkinter import ttk, messagebox
 from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
+from Menu import mo_menu
 
 def open_NhanVien():
    def center_window(win, w=900, h=700):
@@ -14,7 +15,7 @@ def open_NhanVien():
        win.geometry(f'{w}x{h}+{x}+{y}')
 
    rootNV = Tk()
-   rootNV.title("Quản lý Khách Hàng")
+   rootNV.title("Quản lý Nhân ViVi")
    rootNV.minsize(900, 700)
    center_window(rootNV)
 
@@ -60,7 +61,7 @@ def open_NhanVien():
    frame_bang.pack(pady=5, expand=True)
 
    # Treeview
-   columns = ("Mã nhân viên", "Tên nhân viên", "Giới tính", "Điện thoại", "Địa chỉ", "Chức vụ", "Tầng trực", "Mật khẩu")  # cần dấu phẩy ở cuối
+   columns = ("Mã_nhân_viên", "Tên_nhân_viên", "Giới_tính", "Điện_thoại", "Địa_chỉ", "Chức_vụ", "Tầng_trực", "Mật_khẩu")  # cần dấu phẩy ở cuối
    tree = ttk.Treeview(frame_bang, columns=columns, show="headings", height=10)
 
    # Thanh cuộn
@@ -72,23 +73,23 @@ def open_NhanVien():
    scroll_x.pack(side="bottom", fill="x")
    tree.pack(side="left", expand=True)
 
-   tree.heading("Mã nhân viên", text="Mã nhân viên")
-   tree.heading("Tên nhân viên", text="Tên nhân viên")
-   tree.heading("Giới tính", text="Giới tính")
-   tree.heading("Điện thoại", text="Điện thoại")
-   tree.heading("Địa chỉ", text="Địa chỉ")
-   tree.heading("Chức vụ", text="Chức vụ")
-   tree.heading("Tầng trực", text="Tầng trực")
-   tree.heading("Mật khẩu", text="Mật khẩu")
+   tree.heading("Mã_nhân_viên", text="Mã nhân viên")
+   tree.heading("Tên_nhân_viên", text="Tên nhân viên")
+   tree.heading("Giới_tính", text="Giới tính")
+   tree.heading("Điện_thoại", text="Điện thoại")
+   tree.heading("Địa_chỉ", text="Địa chỉ")
+   tree.heading("Chức_vụ", text="Chức vụ")
+   tree.heading("Tầng_trực", text="Tầng trực")
+   tree.heading("Mật_khẩu", text="Mật khẩu")
 
-   tree.column("Mã nhân viên", width=100, anchor="center")
-   tree.column("Tên nhân viên", width=150)
-   tree.column("Giới tính", width=100)
-   tree.column("Điện thoại", width=100)
-   tree.column("Địa chỉ", width=150)
-   tree.column("Chức vụ", width=150)
-   tree.column("Tầng trực", width=100, anchor="center")
-   tree.column("Mật khẩu", width=150)
+   tree.column("Mã_nhân_viên", width=100, anchor="center")
+   tree.column("Tên_nhân_viên", width=150)
+   tree.column("Giới_tính", width=100)
+   tree.column("Điện_thoại", width=100)
+   tree.column("Địa_chỉ", width=150)
+   tree.column("Chức_vụ", width=150)
+   tree.column("Tầng_trực", width=100, anchor="center")
+   tree.column("Mật_khẩu", width=150)
 
    tree.pack(padx=5, pady=10, fill="x")
 
@@ -102,13 +103,15 @@ def open_NhanVien():
            return False
 
    def load_tangt_combobox():
+       
        try:
            cur.execute("select * from Tang")
            tang_data = cur.fetchall()
-           tang_list = [row[1] for row in tang_data]
+           tang_list = [row[0] for row in tang_data]
            entry_tt["values"] = tang_list
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load số tầng{e}")
+       
 
    def clear_input():
        entry_mnv.delete(0, END)
@@ -117,10 +120,11 @@ def open_NhanVien():
        entry_dt.delete(0, END)
        entry_dc.delete(0, END)
        entry_cv.delete(0, END)
-       entry_tt.delete(0, END)
+       entry_tt.set("")
        entry_mk.delete(0, END)
 
    def load_data():
+       
        if conn is None or cur is None:
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
@@ -131,17 +135,11 @@ def open_NhanVien():
                tree.insert("", END, values=row)
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
+       
 
-   def suaten(tenkh):
-       s = tenkh
-       s = s.strip()
-       arr = s.split(' ')
-       s = ""
-       for i in arr:
-           word = i
-           if len(word.strip()) != 0:
-               s += word + "_"
-       return s.strip()
+   def suaten(tennv):
+       parts = tennv.strip().split()
+       return '_'.join(parts)
 
    def them_NV():
        manv = entry_mnv.get()
@@ -158,9 +156,9 @@ def open_NhanVien():
            return
 
        if kt_manv(manv) == False:
-           messagebox.showerror("Lỗi", "MaKH không hợp lệ")
+           messagebox.showerror("Lỗi", "MaNV không hợp lệ")
            return
-
+       
        try:
            manv = suaten(manv)
            # kt xem tang có bị trùng ko
@@ -170,7 +168,7 @@ def open_NhanVien():
                messagebox.showwarning("Trùng lập", f"Nhân viên {manv} đã tồn tại")
                return
 
-           cur.execute("Insert into NhanViên (MaNV, TenNV, GioiTinhNV, DThoaiNV, DChiKH, ChucVu, TangTruc, MatKhau) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+           cur.execute("Insert into NhanVien (MaNV, TenNV, GioiTinhNV, DThoaiNV, DChiNV, ChucVu, TangTruc, MatKhau) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
                        (manv,tennv,gioitinh,dthoai,dchi,chucvu,tangtruc,matkhau))
            conn.commit()
            load_data()
@@ -178,6 +176,7 @@ def open_NhanVien():
            messagebox.showinfo("Thành công", "Đã thêm phòng mới")
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
+       
 
    def xoa_NV():
        selected = tree.selection()
@@ -188,14 +187,15 @@ def open_NhanVien():
        confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa phòng?")
        if not confirm:
            return
-
+       
        try:
            cur.execute("DELETE FROM NhanVien where MaNV=%s", (manv,))
            conn.commit()
            load_data()
-           messagebox.showinfo("Đã xoá")
+           messagebox.showinfo("Thành cônc", "Đã xoá")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+       
 
    def sua_NV():
        selected = tree.selection()
@@ -216,8 +216,7 @@ def open_NhanVien():
        entry_dc.insert(END, values[4])
        entry_cv.delete(0, END)
        entry_cv.insert(END, values[5])
-       entry_tt.delete(0, END)
-       entry_tt.insert(END, values[6])
+       entry_tt.set(values[6])
        entry_mk.delete(0, END)
        entry_mk.insert(END, values[7])
 
@@ -235,7 +234,7 @@ def open_NhanVien():
            return
 
        if kt_manv(manv) == False:
-           messagebox.showerror("Lỗi", "MaKH không hợp lệ")
+           messagebox.showerror("Lỗi", " không hợp lệ")
            return
 
    def luu_NV():
@@ -250,15 +249,29 @@ def open_NhanVien():
 
        manv = suaten(manv)
 
+       if manv == "" or tennv == "" or gioitinh == "" or dthoai == "" or dchi == "" or chucvu == "" or tangtruc == "" or matkhau == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       if kt_manv(manv) == False:
+           messagebox.showerror("Lỗi", " không hợp lệ")
+           return
+
+       
        try:
-           cur.execute("""UPDATE NhanVien SET MaNV=%s, TenNV=%s, GioiTinhNV=%s, DThoaiNV=%s, DChiNV=%s, ChucVu=%s, TangTruc=%s, MatKhau=%s""",
-                       (manv, tennv, gioitinh, dthoai, dchi, chucvu, tangtruc, matkhau))
+           cur.execute("""UPDATE NhanVien SET TenNV=%s, GioiTinhNV=%s, DThoaiNV=%s, DChiNV=%s, ChucVu=%s, TangTruc=%s, MatKhau=%s where MaNV=%s""",
+                       (tennv, gioitinh, dthoai, dchi, chucvu, tangtruc, matkhau, manv))
            conn.commit()
            load_data()
            clear_input()
            messagebox.showinfo("Thành công", "Cập nhật thành công.")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+       
+
+   def thoat_NV():
+       rootNV.destroy()
+       mo_menu()
 
    frame_btn = Frame(rootNV)
    frame_btn.pack(padx=5, pady=5, anchor="center")
@@ -267,7 +280,7 @@ def open_NhanVien():
    Button(frame_btn, text="Lưu", width=8, command=luu_NV).grid(row=0, column=1, padx=5)
    Button(frame_btn, text="Sửa", width=8, command=sua_NV).grid(row=1, column=0, padx=5)
    Button(frame_btn, text="Xoá", width=8, command=xoa_NV).grid(row=1, column=1, padx=5)
-   Button(frame_btn, text="Thoát", width=8, command=rootNV.quit).grid(row=0, column=2, padx=5)
+   Button(frame_btn, text="Thoát", width=8, command=thoat_NV).grid(row=0, column=2, padx=5)
 
    load_data()
    load_tangt_combobox()
