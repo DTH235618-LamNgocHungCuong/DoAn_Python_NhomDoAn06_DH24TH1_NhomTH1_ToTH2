@@ -8,8 +8,10 @@ def connect_db():
    try:
        conn = pyodbc.connect(
            "DRIVER={ODBC Driver 17 for SQL Server};"
-           "SERVER=Lib-324;"
+           "SERVER=DESKTOP-69RCC7P;"
            "DATABASE=QLKS_DA;"
+           "UID=sa;" # Thay bằng user SQL
+           "PWD=123;" # Thay bằng password SQL
            "Trusted_Connection=yes;"
        )
        print("Kết nối thành cong.")
@@ -17,7 +19,6 @@ def connect_db():
    except Exception as err:
        print("Lỗi kết nối MySQL:", err)
        return None
-
 
 
 '''
