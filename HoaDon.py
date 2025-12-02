@@ -5,7 +5,7 @@ from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
 
-def open_Phong():
+def open_HoaDon():
    def center_window(win, w=800, h=700):
        ws = win.winfo_screenwidth()
        hs = win.winfo_screenheight()
