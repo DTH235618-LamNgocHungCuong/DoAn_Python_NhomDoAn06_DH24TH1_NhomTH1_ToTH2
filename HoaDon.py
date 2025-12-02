@@ -27,7 +27,7 @@ def open_Phong():
    entry_mhd.grid(row=1, column=1)
 
    Label(frame, text="Mã khách hàng:", font=("Times New Roman", 14)).grid(row=1, column=2)
-   entry_mkh = Label(frame, width=10, font=("Times New Roman"))
+   entry_mkh = Label(frame, width=10, font=("Times New Roman", 14))
    entry_mkh.grid(row=1, column=3)
 
    Label(frame, text="Mã thuê phòng:", font=("Times New Roman", 14)).grid(row=2, column=0)
@@ -39,7 +39,7 @@ def open_Phong():
    entry_mnv.grid(row=2, column=3)
 
    Label(frame, text="Tổng tiền:", font=("Times New Roman", 14)).grid(row=3, column=0)
-   entry_tot = Label(frame, width=15, font=("Times New Roman"))
+   entry_tot = Label(frame, width=15, font=("Times New Roman", 14))
    entry_tot.grid(row=3, column=1)
 
    frame.pack(padx=4, pady=4, anchor="center")
