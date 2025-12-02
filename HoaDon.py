@@ -108,7 +108,7 @@ def open_HoaDon():
        
        try:
            matp = entry_mtp.get()
-           cur.execute("SELECT ThanhTien, MaKH FROM ThuePhong WHERE MaTP = %s", (matp,))
+           cur.execute("SELECT ThanhTien, MaKH FROM ThuePhong WHERE MaTP = ?", (matp,))
            matp_data = cur.fetchall()
 
            if not matp_data:
@@ -172,13 +172,13 @@ def open_HoaDon():
        
        try:
            # kt xem tang có bị trùng ko
-           cur.execute("SELECT COUNT(*) FROM HoaDon where MaHD = %s", (mahd,))
+           cur.execute("SELECT COUNT(*) FROM HoaDon where MaHD = ?", (mahd,))
 
            if cur.fetchone()[0] > 0:
                messagebox.showwarning("Trùng lập", f"Hoá đơn {mahd} đã tồn tại")
                return
 
-           cur.execute("Insert into HoaDon (MaHD, MaKH, MaTP, MaNV, TongTien) VALUES (%s, %s, %s, %s, %s)",
+           cur.execute("Insert into HoaDon (MaHD, MaKH, MaTP, MaNV, TongTien) VALUES (?, ?, ?, ?, ?)",
                        (mahd, makh, matp, manv,tongtien))
            conn.commit()
            load_data()
@@ -199,7 +199,7 @@ def open_HoaDon():
            return
        
        try:
-           cur.execute("DELETE FROM HoaDon where MaHD=%s", (mahd,))
+           cur.execute("DELETE FROM HoaDon where MaHD=?", (mahd,))
            conn.commit()
            load_data()
            messagebox.showinfo("Thành công", "Đã xoá")
@@ -248,7 +248,7 @@ def open_HoaDon():
        
        try:
            cur.execute(
-               """UPDATE HoaDon SET MaKH=%s, MaTP=%s, MaNV=%s, TongTien=%s where MaHD=%s""",
+               """UPDATE HoaDon SET MaKH=?, MaTP=?, MaNV=?, TongTien=? where MaHD=?""",
                (makh, matp, manv, tongtien, mahd))
            conn.commit()
            load_data()
