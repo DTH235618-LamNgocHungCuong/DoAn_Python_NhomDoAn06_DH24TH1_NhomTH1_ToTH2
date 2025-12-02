@@ -48,7 +48,7 @@ def open_Phong():
    frame_bang.pack(pady=5, expand=True)
 
    # Treeview
-   columns = ("Mã phòng", "Loại phòng", "Giá phòng", "Tầng")  # cần dấu phẩy ở cuối
+   columns = ("Mã_phòng", "Loại_phòng", "Giá_phòng", "Tầng")  # cần dấu phẩy ở cuối
    tree = ttk.Treeview(frame_bang, columns=columns, show="headings", height=10)
 
    # Thanh cuộn
@@ -59,15 +59,17 @@ def open_Phong():
    scroll_y.pack(side="right", fill="y")
    scroll_x.pack(side="bottom", fill="x")
    tree.pack(side="left", expand=True)
-   for col in columns:
-       tree.heading(col, text=col.title())
-       tree.column(col, width=150, anchor="center")
-   '''
-   tree.column("Mã phòng", width=60, anchor="center")
-   tree.column("Loại phòng", width=150)
-   tree.column("Giá Phòng", width=150)
+   
+   tree.heading("Mã_phòng", text="Mã_phòng")
+   tree.heading("Loại_phòng", text="Loại_phòng")
+   tree.heading("Giá_phòng", text="Giá_phòng")
+   tree.heading("Tầng", text="Tầng")
+   
+   tree.column("Mã_phòng", width=60, anchor="center")
+   tree.column("Loại_phòng", width=150)
+   tree.column("Giá_phòng", width=150)
    tree.column("Tầng", width=60, anchor="center")
-   '''
+   
    tree.pack(padx=5, pady=10, fill="x")
 
    def kt_maph(maph):
@@ -81,19 +83,21 @@ def open_Phong():
 
 
    def load_tang_combobox():
+       
        try:
            cur.execute("select * from Tang")
            tang_data = cur.fetchall()
-           tang_list = [row[1] for row in tang_data]
+           tang_list = [row[0] for row in tang_data]
            entry_st["values"] = tang_list
        except Exception as e:
-           messagebox.showerror("Lỗi", f"Lỗi load số tầng{e}")
+           messagebox.showerror("Lỗi", f"Lỗi load số tầng {e}")
+       
 
    def clear_input():
-       entry_st.delete(0, END)
-       entry_lp.delete(0, END)
+       entry_mp.delete(0, END)
+       entry_lp.set("")
        entry_gp.delete(0, END)
-       entry_st.delete(0, END)
+       entry_st.set("")
 
    def load_data():
        
@@ -110,7 +114,7 @@ def open_Phong():
        
 
    def them_phong():
-       maph = entry_st.get()
+       maph = entry_mp.get()
        loaiphong = entry_lp.get()
        giaphong = entry_gp.get()
        tang = entry_st.get()
@@ -123,7 +127,7 @@ def open_Phong():
            messagebox.showerror("Lỗi","MaPh không hợp lệ")
            return
 
-
+       
        try:
            # kt xem tang có bị trùng ko
            cur.execute("SELECT COUNT(*) FROM Phong where MaPh = %s", (maph,))
@@ -139,6 +143,7 @@ def open_Phong():
            messagebox.showinfo("Thành công", "Đã thêm phòng mới")
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
+       
 
    def xoa_phong():
        selected = tree.selection()
@@ -157,6 +162,8 @@ def open_Phong():
            messagebox.showinfo("Đã xoá")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+       
+
    def sua_phong():
        selected = tree.selection()
        if not selected:
@@ -166,14 +173,12 @@ def open_Phong():
        entry_mp.delete(0, END)
        entry_mp.insert(0, values[0]) #khóa
        entry_mp.config(state='disabled')
-       entry_lp.delete(0, END)
-       entry_lp.config(0, values[1])
+       entry_lp.set(values[1])
        entry_gp.delete(0, END)
        entry_gp.insert(0, values[2])
-       entry_st.delete(0, END)
-       entry_st.insert(0, values[3])
+       entry_st.set(values[3])
 
-       maph = entry_st.get()
+       maph = entry_mp.get()
        loaiphong = entry_lp.get()
        giaphong = entry_gp.get()
        tang = entry_st.get()
@@ -187,19 +192,29 @@ def open_Phong():
            return
        
    def luu_phong():
-       maph = entry_st.get()
+       maph = entry_mp.get()
        loaiphong = entry_lp.get()
        giaphong = entry_gp.get()
        tang = entry_st.get()
-      
+
+       if maph == "" or loaiphong == "" or giaphong == "" or tang == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       if kt_maph(maph) == False:
+           messagebox.showerror("Lỗi","MaPh không hợp lệ")
+           return
+
+       
        try:
-           cur.execute("""UPDATE Phong SET MaPh=%s, LoaiPh=%s, GiaPh=%s, Tang=%s""", (maph,loaiphong,giaphong,tang))
+           cur.execute("""UPDATE Phong SET LoaiPh=%s, GiaPh=%s, Tang=%s where MaPh=%s""", (loaiphong,giaphong,tang,maph))
            conn.commit()
            load_data()
            clear_input()
            messagebox.showinfo("Thành công", "Cập nhật thành công.")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+       
 
    frame_btn = Frame(rootP)
    frame_btn.pack(padx=5, pady=5, anchor="center")
@@ -214,8 +229,6 @@ def open_Phong():
 
    load_data()
    load_tang_combobox()
-
-   rootP.mainloop()
 
    rootP.mainloop()
 
