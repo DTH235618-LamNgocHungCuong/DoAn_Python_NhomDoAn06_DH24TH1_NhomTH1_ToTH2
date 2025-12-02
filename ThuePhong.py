@@ -47,11 +47,11 @@ def open_ThuePhong():
    entry_ndi.grid(row=3, column=3)
 
    Label(frame, text="Số ngày:", font=("Times New Roman", 14)).grid(row=4, column=0)
-   entry_sn = Label(frame, width=10, font=("Times New Roman"))
+   entry_sn = Label(frame, width=10, font=("Times New Roman", 14))
    entry_sn.grid(row=4, column=1)
 
    Label(frame, text="Thành tiền:", font=("Times New Roman", 14)).grid(row=4, column=2)
-   entry_tt = Label(frame, width=15, font=("Times New Roman"))
+   entry_tt = Label(frame, width=15, font=("Times New Roman", 14))
    entry_tt.grid(row=4, column=3)
 
    frame.pack(padx=4, pady=4, anchor="center")
