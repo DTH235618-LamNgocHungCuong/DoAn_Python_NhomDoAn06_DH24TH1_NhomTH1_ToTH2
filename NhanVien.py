@@ -4,7 +4,6 @@ from tkinter import ttk, messagebox
 from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
-from Menu import mo_menu
 
 def open_NhanVien():
    def center_window(win, w=900, h=700):
@@ -271,7 +270,6 @@ def open_NhanVien():
 
    def thoat_NV():
        rootNV.destroy()
-       mo_menu()
 
    frame_btn = Frame(rootNV)
    frame_btn.pack(padx=5, pady=5, anchor="center")
