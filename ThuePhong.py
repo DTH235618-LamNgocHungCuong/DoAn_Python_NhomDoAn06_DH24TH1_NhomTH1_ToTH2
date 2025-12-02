@@ -4,7 +4,6 @@ from tkcalendar import DateEntry
 from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
-from Menu import mo_menu
 
 def open_ThuePhong():
    def center_window(win, w=800, h=700):
@@ -312,7 +311,6 @@ def open_ThuePhong():
        
    def thoat_TP():
        rootTP.destroy()
-       mo_menu()
 
    frame_btn = Frame(rootTP)
    frame_btn.pack(padx=5, pady=5, anchor="center")
