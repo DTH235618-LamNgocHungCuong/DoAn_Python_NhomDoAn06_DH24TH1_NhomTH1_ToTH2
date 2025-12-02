@@ -130,13 +130,13 @@ def open_Phong():
        
        try:
            # kt xem tang có bị trùng ko
-           cur.execute("SELECT COUNT(*) FROM Phong where MaPh = %s", (maph,))
+           cur.execute("SELECT COUNT(*) FROM Phong where MaPh = ?", (maph,))
 
            if cur.fetchone()[0] > 0:
                messagebox.showwarning("Trùng lập", f"Phòng {maph} đã tồn tại")
                return
 
-           cur.execute("Insert into Phong (MaPh, LoaiPh, GiaPh, Tang) VALUES (%s, %s, %s, %s)", (maph, loaiphong,giaphong,tang))
+           cur.execute("Insert into Phong (MaPh, LoaiPh, GiaPh, Tang) VALUES (?, ?, ?, ?)", (maph, loaiphong,giaphong,tang))
            conn.commit()
            load_data()
            clear_input()
@@ -156,7 +156,7 @@ def open_Phong():
            return
        
        try:
-           cur.execute("DELETE FROM Phong where MaPh=%s", (phong,))
+           cur.execute("DELETE FROM Phong where MaPh=?", (phong,))
            conn.commit()
            load_data()
            messagebox.showinfo("Đã xoá")
@@ -207,7 +207,7 @@ def open_Phong():
 
        
        try:
-           cur.execute("""UPDATE Phong SET LoaiPh=%s, GiaPh=%s, Tang=%s where MaPh=%s""", (loaiphong,giaphong,tang,maph))
+           cur.execute("""UPDATE Phong SET LoaiPh=?, GiaPh=?, Tang=? where MaPh=?""", (loaiphong,giaphong,tang,maph))
            conn.commit()
            load_data()
            clear_input()
