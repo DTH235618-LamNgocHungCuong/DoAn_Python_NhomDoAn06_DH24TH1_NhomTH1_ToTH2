@@ -49,10 +49,11 @@ def open_Tang():
    tree.pack(padx=5, pady=10, fill="x")
 
    def kt_sTang(tang):
-       if tang.isdigit() and tang>=0 and tang<=20:
+       if tang.isdigit() and 0 <= int(tang) <= 20:
            return True
        else:
            return False
+           
 
    def clear_input():
        entry_st.delete(0, END)
@@ -78,7 +79,7 @@ def open_Tang():
            messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
            return
 
-       if kt_sTang(int(tang))==False:
+       if kt_sTang(tang)==False:
            messagebox.showwarning("Số tầng không đúng quy định", "Vui lòng nhập lại thông tin")
            return
 
@@ -91,7 +92,7 @@ def open_Tang():
                messagebox.showwarning("Trùng lập", f"Tầng {tang} đã tồn tại")
                return
 
-           cur.execute("Insert into Tang (tang) VALUES (%s)", (tang))
+           cur.execute("Insert into Tang (Tang) VALUES (%s)", (tang))
            conn.commit()
            load_data()
            clear_input()
@@ -134,16 +135,29 @@ def open_Tang():
            messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
            return
 
-       if kt_sTang(int(tang)) == False:
+       if kt_sTang(tang) == False:
            messagebox.showwarning("Số tầng không đúng quy định", "Vui lòng nhập lại thông tin")
            return
 
    def luu_tang():
+       selected = tree.selection()
+       old_tang = tree.item(selected)["values"][0]  
        tang = entry_st.get()
+
+       if tang == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       if kt_sTang(tang) == False:
+           messagebox.showwarning("Số tầng không đúng quy định", "Vui lòng nhập lại thông tin")
+           return
 
        
        try:
-           cur.execute("""UPDATE Tang SET Tang=%s""", (tang))
+           cur.execute("""UPDATE Tang SET Tang=%s where Tang=%s""", (tang, old_tang))
+           if cur.fetchone()[0] > 0:
+               messagebox.showwarning("Trùng lập", f"Tầng {tang} đã tồn tại")
+               return
            conn.commit()
            load_data()
            clear_input()
@@ -164,6 +178,7 @@ def open_Tang():
    load_data()
 
    rootT.mainloop()
+
 
 
 
