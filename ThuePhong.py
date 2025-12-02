@@ -205,7 +205,7 @@ def open_Phong():
            cur.execute("SELECT COUNT(*) FROM ThuePhong where MaTP = %s", (matp,))
 
            if cur.fetchone()[0] > 0:
-               messagebox.showwarning("Trùng lập", f"Phòng {matp} đã tồn tại")
+               messagebox.showwarning("Trùng lập", f"Mã thuê phòng {matp} đã tồn tại")
                return
 
            cur.execute("Insert into ThuePhong (MaTP, MaKH, MaNV, MaPh, NgDen, NgDi, SoNgay, ThanhTien) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
