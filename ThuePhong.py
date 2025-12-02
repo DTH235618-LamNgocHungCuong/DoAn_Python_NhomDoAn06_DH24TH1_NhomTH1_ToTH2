@@ -4,6 +4,7 @@ from tkcalendar import DateEntry
 from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
+from Menu import mo_menu
 
 def open_ThuePhong():
    def center_window(win, w=800, h=700):
@@ -103,36 +104,43 @@ def open_ThuePhong():
            return False
 
    def load_makh_combobox():
+       
        try:
            cur.execute("select MaKH from KhachHang")
            makh_data = cur.fetchall()
-           makh_list = [row[1] for row in makh_data]
+           makh_list = [row[0] for row in makh_data]
            entry_mkh["values"] = makh_list
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load mã khách hàng{e}")
+       
 
    def load_manv_combobox():
+       
        try:
            cur.execute("select MaNV from NhanVien")
            manv_data = cur.fetchall()
-           manv_list = [row[1] for row in manv_data]
+           manv_list = [row[0] for row in manv_data]
            entry_mnv["values"] = manv_list
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load mã nhân viên{e}")
+       
 
    def load_maph_combobox():
+       
        try:
            cur.execute("select MaPh from Phong")
            maph_data = cur.fetchall()
-           maph_list = [row[1] for row in maph_data]
+           maph_list = [row[0] for row in maph_data]
            entry_mp["values"] = maph_list
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load mã phòng{e}")
+       
 
    def tinh_songay_va_thanhtien():
+       
        try:
-           ngayden = entry_nd.get()
-           ngaydi = entry_ndi.get()
+           ngayden = entry_nd.get_date()
+           ngaydi = entry_ndi.get_date()
            if ngaydi <= ngayden:
                 messagebox.showwarning("Số ngày đi phải lớn hơn ngày đến", "Vui lòng nhập lại thông tin")
                 return None, None
@@ -143,36 +151,37 @@ def open_ThuePhong():
            if not maph_data:
                 messagebox.showwarning("Không tìm thấy mã phòng", "Vui lòng nhập lại thông tin")
                 return None, None
-           gia = float(maph_data[0])
+           gia = float(maph_data[0][0])
            thanhtien = gia * songay
            return songay, thanhtien
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi tính thành tiền{e}")
            return None, None
+       
 
    def hien_songay_va_thanhtien():
-       ngden = entry_nd.get()
-       ngdi = entry_ndi.get()
-       if ngden != "" and ngdi != "":
+       ngayden = entry_nd.get_date()
+       ngaydi = entry_ndi.get_date()
+       if ngayden != "" and ngaydi != "":
            songay, thanhtien = tinh_songay_va_thanhtien()
            if songay is not None and thanhtien is not None:
-               entry_nd.config(text=str(songay))
-               entry_ndi.config(text=str(thanhtien))
+               entry_sn.config(text=str(songay))
+               entry_tt.config(text=str(thanhtien))
 
 
 
    def clear_input():
        entry_mtp.delete(0, END)
-       entry_mkh.delete(0, END)
-       entry_mnv.delete(0, END)
-       entry_mp.delete(0, END)
+       entry_mkh.set("")
+       entry_mnv.set("")
+       entry_mp.set("")
        entry_nd.delete(0, END)
        entry_ndi.delete(0, END)
        entry_sn.config(text="")
        entry_tt.config(text="")
 
    def load_data():
-
+       
        if conn is None or cur is None:
            messagebox.showerror("Lỗi", "Không thể kết nối với SQL.")
            return
@@ -183,6 +192,7 @@ def open_ThuePhong():
                tree.insert("", END, values=row)
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
+       
 
    def them_TP():
        matp = entry_mtp.get()
@@ -203,7 +213,7 @@ def open_ThuePhong():
        songay, thanhtien = tinh_songay_va_thanhtien()
        if songay is None or thanhtien is None:
            return
-
+       
        try:
            # kt xem tang có bị trùng ko
            cur.execute("SELECT COUNT(*) FROM ThuePhong where MaTP = %s", (matp,))
@@ -220,6 +230,7 @@ def open_ThuePhong():
            messagebox.showinfo("Thành công", "Đã thêm thuê phòng")
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
+       
 
    def xoa_TP():
        selected = tree.selection()
@@ -230,7 +241,7 @@ def open_ThuePhong():
        confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa phòng?")
        if not confirm:
            return
-
+       
        try:
            cur.execute("DELETE FROM ThuePhong where MaTP=%s", (matp,))
            conn.commit()
@@ -238,6 +249,7 @@ def open_ThuePhong():
            messagebox.showinfo("Đã xoá")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+       
 
    def sua_TP():
        selected = tree.selection()
@@ -248,12 +260,9 @@ def open_ThuePhong():
        entry_mtp.delete(0, END)
        entry_mtp.insert(0, values[0])
        entry_mtp.config(state='disabled')
-       entry_mkh.delete(0, END)
-       entry_mkh.insert(0, values[1])
-       entry_mnv.delete(0, END)
-       entry_mnv.insert(0, values[2])
-       entry_mp.delete(0, END)
-       entry_mp.insert(0, values[3])
+       entry_mkh.set(values[1])
+       entry_mnv.set(values[2])
+       entry_mp.set(values[3])
        entry_nd.set_date(values[4])
        entry_ndi.set_date(values[5])
        entry_sn.config(text=values[6])
@@ -289,17 +298,21 @@ def open_ThuePhong():
        songay, thanhtien = tinh_songay_va_thanhtien()
        if songay is None or thanhtien is None:
            return
-
+       
        try:
            cur.execute(
-               """UPDATE ThuePhong SET MaTP=%s, MaKH=%s, MaNV=%s, MaPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s""",
-               (matp, makh, manv, maph, ngden, ngdi, songay, ngdi))
+               """UPDATE ThuePhong SET MaKH=%s, MaNV=%s, MaPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s where MaTP=%s""",
+               (makh, manv, maph, ngden, ngdi, songay, thanhtien, matp))
            conn.commit()
            load_data()
            clear_input()
            messagebox.showinfo("Thành công", "Cập nhật thành công.")
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+       
+   def thoat_TP():
+       rootTP.destroy()
+       mo_menu()
 
    frame_btn = Frame(rootTP)
    frame_btn.pack(padx=5, pady=5, anchor="center")
@@ -308,7 +321,7 @@ def open_ThuePhong():
    Button(frame_btn, text="Lưu", width=8, command=luu_TP).grid(row=0, column=1, padx=5)
    Button(frame_btn, text="Sửa", width=8, command=sua_TP).grid(row=1, column=0, padx=5)
    Button(frame_btn, text="Xoá", width=8, command=xoa_TP).grid(row=1, column=1, padx=5)
-   Button(frame_btn, text="Thoát", width=8, command=rootTP.quit).grid(row=0, column=2, padx=5)
+   Button(frame_btn, text="Thoát", width=8, command=thoat_TP).grid(row=0, column=2, padx=5)
 
    load_data()
    load_makh_combobox()
