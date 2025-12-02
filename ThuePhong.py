@@ -184,13 +184,17 @@ def open_Phong():
        except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
 
-   def them_thphong():
+   def them_TP():
        matp = entry_mtp.get()
        makh = entry_mkh.get()
        manv = entry_mnv.get()
        maph = entry_mp.get()
        ngden = entry_nd.get()
        ngdi = entry_ndi.get()
+
+       if matp == "" or makh == "" or manv == "" or maph == "" or ngden == "" or ngdi == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
 
        songay, thanhtien = tinh_songay_va_thanhtien()
        if songay is None or thanhtien is None:
@@ -213,6 +217,95 @@ def open_Phong():
        except Exception as e:
            messagebox.showerror("Lỗi", f"{e}")
 
+   def xoa_TP():
+       selected = tree.selection()
+       if not selected:
+           messagebox.showwarning("Chưa chon", "Hãy chọn 1 dòng để xoá")
+           return
+       matp = tree.item(selected, "values")[0]
+       confirm = messagebox.askyesno("Xác nhận", "Bạn có chắc muốn xóa phòng?")
+       if not confirm:
+           return
+
+       try:
+           cur.execute("DELETE FROM ThuePhong where MaTP=%s", (matp,))
+           conn.commit()
+           load_data()
+           messagebox.showinfo("Đã xoá")
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi khi xoá:\n{e}")
+
+   def sua_TP():
+       selected = tree.selection()
+       if not selected:
+           messagebox.showwarning("Chưa chọn", "Hãy chọn 1 dòng để sửa")
+           return
+       values = tree.item(selected)["values"]
+       entry_mtp.delete(0, END)
+       entry_mtp.insert(0, values[0])
+       entry_mtp.config(state='disabled')
+       entry_mkh.delete(0, END)
+       entry_mkh.insert(0, values[1])
+       entry_mnv.delete(0, END)
+       entry_mnv.insert(0, values[2])
+       entry_mp.delete(0, END)
+       entry_mp.insert(0, values[3])
+       entry_nd.set_date(values[4])
+       entry_ndi.set_date(values[5])
+       entry_sn.config(text=values[6])
+       entry_tt.config(text=values[7])
+
+       matp = entry_mtp.get()
+       makh = entry_mkh.get()
+       manv = entry_mnv.get()
+       maph = entry_mp.get()
+       ngden = entry_nd.get()
+       ngdi = entry_ndi.get()
+
+       if matp == "" or makh == "" or manv == "" or maph == "" or ngden == "" or ngdi == "":
+           messagebox.showwarning("Thiếu dữ liệu", "Vui lòng nhập đủ thông tin")
+           return
+
+       songay, thanhtien = tinh_songay_va_thanhtien()
+       if songay is None or thanhtien is None:
+           return
+
+       if kt_matp(matp) == False:
+           messagebox.showerror("Lỗi", "MaTP không hợp lệ")
+           return
+
+   def luu_TP():
+       matp = entry_mtp.get()
+       makh = entry_mkh.get()
+       manv = entry_mnv.get()
+       maph = entry_mp.get()
+       ngden = entry_nd.get()
+       ngdi = entry_ndi.get()
+
+       songay, thanhtien = tinh_songay_va_thanhtien()
+       if songay is None or thanhtien is None:
+           return
+
+       try:
+           cur.execute(
+               """UPDATE ThuePhong SET MaTP=%s, MaKH=%s, MaNV=%s, maPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s""",
+               (matp, makh, manv, maph, ngden, ngdi, songay, ngdi))
+           conn.commit()
+           load_data()
+           clear_input()
+           messagebox.showinfo("Thành công", "Cập nhật thành công.")
+       except Exception as e:
+           messagebox.showerror("Lỗi", f"Lỗi khi lưu:\n{e}")
+
+   frame_btn = Frame(rootTP)
+   frame_btn.pack(padx=5, pady=5, anchor="center")
+
+   Button(frame_btn, text="Thêm", width=8, command=them_TP).grid(row=0, column=0, padx=5)
+   Button(frame_btn, text="Lưu", width=8, command=luu_TP).grid(row=0, column=1, padx=5)
+   Button(frame_btn, text="Sửa", width=8, command=sua_TP).grid(row=1, column=0, padx=5)
+   Button(frame_btn, text="Xoá", width=8, command=xoa_TP).grid(row=1, column=1, padx=5)
+   Button(frame_btn, text="Thoát", width=8, command=rootTP.quit).grid(row=0, column=2, padx=5)
+
    load_data()
    load_makh_combobox()
    load_maph_combobox()
@@ -220,4 +313,3 @@ def open_Phong():
    hien_songay_va_thanhtien()
 
    rootTP.mainloop()
-
