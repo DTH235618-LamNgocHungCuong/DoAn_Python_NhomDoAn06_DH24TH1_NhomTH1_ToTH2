@@ -36,10 +36,11 @@ def mo_menu(quyen):
    Button(aButton, text="Thuê Phòng", font=("Times New Roman", 14), width=8, command=lambda: open_ThuePhong()).grid(row=2,column=0)
    Button(aButton, text="Hoá Đơn", font=("Times New Roman", 14), width=8, command=lambda: open_HoaDon()).grid(row=2,column=1)
    button = Button(aButton, text="Nhân Viên", font=("Times New Roman", 14), width=8, command=lambda: open_NhanVien()).grid(row=2,column=2)
-   aButton.pack(padx=5, pady=5, anchor = "w")
+   aButton.pack(padx=5, pady=5, anchor = "center")
 
    if quyen != "admin":
        button['state'] = DISABLED
 
    rootM.mainloop()
+
 
