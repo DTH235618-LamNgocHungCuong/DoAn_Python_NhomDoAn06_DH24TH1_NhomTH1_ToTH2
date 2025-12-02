@@ -292,7 +292,7 @@ def open_Phong():
 
        try:
            cur.execute(
-               """UPDATE ThuePhong SET MaTP=%s, MaKH=%s, MaNV=%s, maPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s""",
+               """UPDATE ThuePhong SET MaTP=%s, MaKH=%s, MaNV=%s, MaPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s""",
                (matp, makh, manv, maph, ngden, ngdi, songay, ngdi))
            conn.commit()
            load_data()
