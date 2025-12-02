@@ -146,7 +146,7 @@ def open_ThuePhong():
                 return None, None
            songay = (ngaydi - ngayden).days
            maph = entry_mp.get()
-           cur.execute("select GiaPh from Phong where MaPh = %s", (maph,))
+           cur.execute("select GiaPh from Phong where MaPh = ?", (maph,))
            maph_data = cur.fetchall()
            if not maph_data:
                 messagebox.showwarning("Không tìm thấy mã phòng", "Vui lòng nhập lại thông tin")
@@ -216,13 +216,13 @@ def open_ThuePhong():
        
        try:
            # kt xem tang có bị trùng ko
-           cur.execute("SELECT COUNT(*) FROM ThuePhong where MaTP = %s", (matp,))
+           cur.execute("SELECT COUNT(*) FROM ThuePhong where MaTP = ?", (matp,))
 
            if cur.fetchone()[0] > 0:
                messagebox.showwarning("Trùng lập", f"Mã thuê phòng {matp} đã tồn tại")
                return
 
-           cur.execute("Insert into ThuePhong (MaTP, MaKH, MaNV, MaPh, NgDen, NgDi, SoNgay, ThanhTien) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)",
+           cur.execute("Insert into ThuePhong (MaTP, MaKH, MaNV, MaPh, NgDen, NgDi, SoNgay, ThanhTien) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
                        (matp,makh,manv,maph,ngden,ngdi,songay,thanhtien))
            conn.commit()
            load_data()
@@ -243,7 +243,7 @@ def open_ThuePhong():
            return
        
        try:
-           cur.execute("DELETE FROM ThuePhong where MaTP=%s", (matp,))
+           cur.execute("DELETE FROM ThuePhong where MaTP=?", (matp,))
            conn.commit()
            load_data()
            messagebox.showinfo("Đã xoá")
@@ -301,7 +301,7 @@ def open_ThuePhong():
        
        try:
            cur.execute(
-               """UPDATE ThuePhong SET MaKH=%s, MaNV=%s, MaPh=%s, NgDen=%s, NgDi=%s, SoNgay=%s, ThanhTien=%s where MaTP=%s""",
+               """UPDATE ThuePhong SET MaKH=?, MaNV=?, MaPh=?, NgDen=?, NgDi=?, SoNgay=?, ThanhTien=? where MaTP=?""",
                (makh, manv, maph, ngden, ngdi, songay, thanhtien, matp))
            conn.commit()
            load_data()
