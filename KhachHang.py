@@ -124,13 +124,13 @@ def open_KhachHang():
        try:
            makh = suaten(makh)
            # kt xem tang có bị trùng ko
-           cur.execute("SELECT COUNT(*) FROM KhachHang where MaKH = %s", (makh,))
+           cur.execute("SELECT COUNT(*) FROM KhachHang where MaKH = ?", (makh,))
 
            if cur.fetchone()[0] > 0:
                messagebox.showwarning("Trùng lập", f"Khách hành {makh} đã tồn tại")
                return
 
-           cur.execute("Insert into KhachHang (MaKH, TenKH, DThoaiKH, DChiKH) VALUES (%s, %s, %s, %s)", (makh, tenkh,dthoai,dchi))
+           cur.execute("Insert into KhachHang (MaKH, TenKH, DThoaiKH, DChiKH) VALUES (?, ?, ?, ?)", (makh, tenkh,dthoai,dchi))
            conn.commit()
            load_data()
            clear_input()
@@ -150,7 +150,7 @@ def open_KhachHang():
            return
        
        try:
-           cur.execute("DELETE FROM KhachHang where MaKH=%s", (makh,))
+           cur.execute("DELETE FROM KhachHang where MaKH=?", (makh,))
            conn.commit()
            load_data()
            messagebox.showinfo("Đã xoá")
@@ -194,7 +194,7 @@ def open_KhachHang():
        dchi = entry_dc.get()
        
        try:
-           cur.execute("""UPDATE KhachHang SET TenKH=%s, DThoaiKH=%s, DChiKH=%s where MaKH=%s""", (tenkh,dthoai,dchi,makh))
+           cur.execute("""UPDATE KhachHang SET TenKH=?, DThoaiKH=?, DChiKH=? where MaKH=?""", (tenkh,dthoai,dchi,makh))
            conn.commit()
            load_data()
            clear_input()
@@ -222,4 +222,5 @@ def open_KhachHang():
 
 
    rootKH.mainloop()
+
 
