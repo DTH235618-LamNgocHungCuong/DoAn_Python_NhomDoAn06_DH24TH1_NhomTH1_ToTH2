@@ -155,7 +155,7 @@ def open_Phong():
        ngdi = entry_ndi.get()
        if ngden != "" and ngdi != "":
            songay, thanhtien = tinh_songay_va_thanhtien()
-           if songay is not None or thanhtien is not None:
+           if songay is not None and thanhtien is not None:
                entry_nd.config(text=str(songay))
                entry_ndi.config(text=str(thanhtien))
 
