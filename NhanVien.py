@@ -5,7 +5,7 @@ from datetime import datetime, date
 from SQL_connec import conn, cur
 from tkinter import filedialog, messagebox
 
-def open_KhachHang():
+def open_NhanVien():
    def center_window(win, w=900, h=700):
        ws = win.winfo_screenwidth()
        hs = win.winfo_screenheight()
