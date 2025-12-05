@@ -36,7 +36,7 @@ def open_NhanVien():
     entry_mnv.grid(row=1, column=1)
 
     Label(frame, text="Tên nhân viên:", font=("Times New Roman", 14)).grid(row=1, column=2)
-    entry_tnv = Entry(frame, width=15)
+    entry_tnv = Entry(frame, width=20)
     entry_tnv.grid(row=1, column=3)
 
     Label(frame, text="Giới tính:", font=("Times New Roman", 14)).grid(row=2, column=0)
@@ -49,7 +49,7 @@ def open_NhanVien():
     entry_dtnv.grid(row=2, column=3)
 
     Label(frame, text="Địa chỉ:", font=("Times New Roman", 14)).grid(row=3, column=0)
-    entry_dcnv = Entry(frame, width=15)
+    entry_dcnv = Entry(frame, width=30)
     entry_dcnv.grid(row=3, column=1)
 
     Label(frame, text="Chức vụ:", font=("Times New Roman", 14)).grid(row=3, column=2)
@@ -107,7 +107,7 @@ def open_NhanVien():
         try:
            cur.execute("SELECT * FROM NhanVien")
            for row in cur.fetchall():
-               tree.insert("", END, values=row)
+               tree.insert("", END, values=list(row))
         except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
         finally:
@@ -231,12 +231,13 @@ def open_NhanVien():
     Button(frame_btn, text="Sửa", width=8, command=sua_nhanvien).grid(row=0, column=2, padx=5)
     Button(frame_btn, text="Hủy", width=8, command=clear_input).grid(row=1, column=0, padx=5)
     Button(frame_btn, text="Xoá", width=8, command=xoa_nhanvien).grid(row=1, column=1, padx=5)
-    Button(frame_btn, text="Thoát", width=8, command=rootNV.quit).grid(row=0, column=3, padx=5)
+    Button(frame_btn, text="Thoát", width=8, command=rootNV.quit).grid(row=1, column=2, padx=5)
 
    
 
     load_data()
 
     rootNV.mainloop()
+
 
     
