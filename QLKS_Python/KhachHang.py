@@ -34,7 +34,7 @@ def open_KhachHang():
     entry_mkh.grid(row=1, column=1)
 
     Label(frame, text="Tên khách hàng:", font=("Times New Roman", 14)).grid(row=1, column=2)
-    entry_tkh = Entry(frame, width=10)
+    entry_tkh = Entry(frame, width=20)
     entry_tkh.grid(row=1, column=3)
 
     Label(frame, text="Điện thoại:", font=("Times New Roman", 14)).grid(row=2, column=0)
@@ -42,7 +42,7 @@ def open_KhachHang():
     entry_dtkh.grid(row=2, column=1)
 
     Label(frame, text="Địa chỉ:", font=("Times New Roman", 14)).grid(row=2, column=2)
-    entry_dckh = Entry(frame, width=10)
+    entry_dckh = Entry(frame, width=30)
     entry_dckh.grid(row=2, column=3)
 
     frame.pack(padx=4, pady=4, anchor="center")
@@ -69,9 +69,9 @@ def open_KhachHang():
     tree.heading("Địa_chỉ", text="Địa_chỉ")
 
     tree.column("Mã_khách_hàng", width=80, anchor="center")
-    tree.column("Tên_khách_hàng", width=200)
-    tree.column("Điện_thoại", width=150)
-    tree.column("Địa_chỉ", width=200)
+    tree.column("Tên_khách_hàng", width=150)
+    tree.column("Điện_thoại", width=100)
+    tree.column("Địa_chỉ", width=250)
 
     tree.pack(padx=10, pady=5, fill="both")
 
@@ -90,7 +90,7 @@ def open_KhachHang():
         try:
            cur.execute("SELECT * FROM KhachHang")
            for row in cur.fetchall():
-               tree.insert("", END, values=row)
+               tree.insert("", END, values=list(row))
         except Exception as e:
            messagebox.showerror("Lỗi", f"Lỗi load dữ liệu{e}")
         finally:
@@ -203,3 +203,4 @@ def open_KhachHang():
     load_data()
 
     rootKH.mainloop()
+
