@@ -82,10 +82,10 @@ def open_NhanVien():
     tree.heading("Chức_vụ", text="Chức_vụ")
    
     tree.column("Mã_nhân_viên", width=80, anchor="center")
-    tree.column("Tên_nhân_viên", width=200)
+    tree.column("Tên_nhân_viên", width=150)
     tree.column("Giới_tính", width=80, anchor="center")
-    tree.column("Điện_thoại", width=150)
-    tree.column("Địa_chỉ", width=200)
+    tree.column("Điện_thoại", width=100)
+    tree.column("Địa_chỉ", width=250)
     tree.column("Chức_vụ", width=200)
    
     tree.pack(padx=10, pady=5, fill="both")
@@ -241,3 +241,4 @@ def open_NhanVien():
 
 
     
+
