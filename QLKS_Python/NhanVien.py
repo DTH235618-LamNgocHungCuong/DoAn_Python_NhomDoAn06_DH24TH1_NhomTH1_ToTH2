@@ -231,7 +231,7 @@ def open_NhanVien():
     Button(frame_btn, text="Sửa", width=8, command=sua_nhanvien).grid(row=0, column=2, padx=5)
     Button(frame_btn, text="Hủy", width=8, command=clear_input).grid(row=1, column=0, padx=5)
     Button(frame_btn, text="Xoá", width=8, command=xoa_nhanvien).grid(row=1, column=1, padx=5)
-    Button(frame_btn, text="Thoát", width=8, command=rootNV.quit).grid(row=1, column=2, padx=5)
+    Button(frame_btn, text="Thoát", width=8, command=rootNV.destroy).grid(row=1, column=2, padx=5)
 
    
 
@@ -241,4 +241,5 @@ def open_NhanVien():
 
 
     
+
 
