@@ -110,19 +110,18 @@ Insert into Phong values ('GI320',N'Đôi', '80.000')
 Insert into Phong values ('GN510',N'Đơn', '50.000')
 Insert into Phong values ('GI920',N'Đôi', '80.000')
 
+	
+Insert into KhachHang values ('D308',N'Trần Quan Chiến', '0999457223',N'Tỉnh An Giang Phường Long_Xuyên')
+Insert into KhachHang values ('A195',N'Lê Thị Kim', '0989457330',N'Tỉnh An Giang Phường Long Xuyên')
+Insert into KhachHang values ('B208',N'Nguyễn Văn Kiệt', '0973478330',N'Tỉnh An Giang Phường Long_Xuyên')
 
 
+Insert into NhanVien values ('T8Z23',N'Nguyễn Thanh Kim',N'Nữ','0876235117',N'Tình An Giang Phường Long Xuyên',N'Nhan viên dọn vệ sinh')
+Insert into NhanVien values ('T7B52', N'Lê Văn Điền', N'Nam', '0811762357', N'Tình An Giang Phường Long Xuyên',N'Nhân viên dọn vệ sinh')
+Insert into NhanVien values ('A1S59', N'Trần Thị Mai', N'Nữ', '0911237656', N'Tình An Giang Phường Long Xuyên',N'Tiếp tân')
+Insert into NhanVien values ('A1T43', N'Huỳnh Thị Trúc', N'Nữ', '0919777831', N'Tình An Giang Phường Long Xuyên',N'Tiếp tân')
 
-Insert into KhachHang values ('D308',N'Trần_Quan_Chiến', '0999457223',N'Tỉnh_An_Giang, Phường_Long_Xuyên')
-Insert into KhachHang values ('A195',N'Lê_Thị_Kim', '0989457330',N'Tỉnh_An_Giang, Phường_Long_Xuyên')
-
-
-
-Insert into NhanVien values ('T8Z23',N'Nguyễn_Thanh_Kim',N'Nữ','0876235117',N'Tình_An_Giang_Phường_Long_Xuyên',N'Nhan_viên_dọn_vệ_sinh','KL3017')
-Insert into NhanVien values ('T7B52', N'Lê_Văn_Điền', N'Nam', '0811762357', N'Tình_An_Giang_Phường_Long_Xuyên',N'Nhân_viên_dọn_vệ_sinh','93433624')
-Insert into NhanVien values ('A1K59', N'Trần_Thị_Mai', N'Nữ', '0911237656', N'Tình_An_Giang_Phường_Long_Xuyên',N'Tiếp_tân', 'KPYFTYTG')
-
-
+	
 Insert into ThuePhong values ('TT5713', 'A195', 'A1K59', 'GI920', '2025-11-10', '2025-11-20', NULL)
 Insert into ThuePhong values ('TQ7783', 'D308', 'A1K59', 'GN510', '2025-10-20', '2025-11-05', NULL)
 Insert into ThuePhong values ('TT7873', 'D308', 'A1K59', 'GN510', '2025-12-30', '2026-01-20', NULL)
@@ -155,5 +154,6 @@ UPDATE HoaDon
 SET TongTien = tp.ThanhTien
 FROM ThuePhong tp
 WHERE tp.MaTP = HoaDon.MaTP
+
 
 
